@@ -15,7 +15,7 @@ app.use(function (req, res, next) {
 });
 
 app.post("/api/register", async (req, res) => {
-    console.log('req.body', req.body)
+   
     const usernameFound = await User.findOne({ username: req.body.username });
     const emailFound = await User.findOne({ email: req.body.email });
     if (usernameFound) {
