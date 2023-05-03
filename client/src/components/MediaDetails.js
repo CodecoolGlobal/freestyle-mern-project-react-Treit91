@@ -7,13 +7,16 @@ function MediaDetails(props) {
   const [writers, setWriters] = React.useState([]);
   const [stars, setStars] = React.useState([]);
 
+  const mediatype = props.media_type;
+  const id = props.movieID;
+
   function getWritersAndDirectors(crew) {
     const directors = [];
     const writers = [];
     crew.forEach((person) => {
       if (person.job === 'Director') {
         directors.push(person);
-      } else if (person.job === 'Writer') {
+      } else if (person.job === 'Writer' || person.job === 'Screenplay') {
         writers.push(person);
       }
     });
@@ -58,7 +61,7 @@ function MediaDetails(props) {
   useEffect(() => {
     async function fetchMovieDetails() {
       const response = await fetch(
-        `https://api.themoviedb.org/3/tv/1396?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
+        `https://api.themoviedb.org/3/${mediatype}/${id}?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
       );
       const data = await response.json();
       setMedia(data);
@@ -66,7 +69,7 @@ function MediaDetails(props) {
     fetchMovieDetails();
     async function fetchMovieCredits() {
       const response = await fetch(
-        'https://api.themoviedb.org/3/tv/1396/credits?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US',
+        `https://api.themoviedb.org/3/${mediatype}/${id}/credits?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
       );
       const data = await response.json();
       setCredits(data);
@@ -74,7 +77,7 @@ function MediaDetails(props) {
       getStars(data.cast);
     }
     fetchMovieCredits();
-  }, []);
+  }, [mediatype, id]);
 
   if (media === null || credits === null) {
     return <div>Loading...</div>;
