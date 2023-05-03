@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 function MediaDetails(props) {
-  const [movie, setMovie] = React.useState(null);
+  const [media, setMedia] = React.useState(null);
   const [credits, setCredits] = React.useState(null);
   const [directors, setDirectors] = React.useState([]);
   const [writers, setWriters] = React.useState([]);
@@ -35,23 +35,23 @@ function MediaDetails(props) {
     return `${hours}h ${minutes}m`;
   }
 
-  function getReleaseDate(movie) {
-    if (movie.hasOwnProperty('first_air_date')) {
-      if (movie.hasOwnProperty('last_air_date')) {
-        return `${movie.first_air_date.split('-')[0]} - ${movie.last_air_date.split('-')[0]}`;
+  function getReleaseDate(media) {
+    if (media.hasOwnProperty('first_air_date')) {
+      if (media.hasOwnProperty('last_air_date')) {
+        return `${media.first_air_date.split('-')[0]} - ${media.last_air_date.split('-')[0]}`;
       } else {
-        return `${movie.first_air_date.split('-')[0]} -`;
+        return `${media.first_air_date.split('-')[0]} -`;
       }
     } else {
-      return movie.release_date.split('-')[0];
+      return media.release_date.split('-')[0];
     }
   }
 
-  function getRuntime(movie) {
-    if (movie.hasOwnProperty('first_air_date')) {
-      return `${Math.max(...movie.episode_run_time)} min`;
+  function getRuntime(media) {
+    if (media.hasOwnProperty('first_air_date')) {
+      return `${Math.max(...media.episode_run_time)} min`;
     } else {
-      return toHoursAndMinutes(movie.runtime);
+      return toHoursAndMinutes(media.runtime);
     }
   }
 
@@ -61,7 +61,7 @@ function MediaDetails(props) {
         `https://api.themoviedb.org/3/tv/1396?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
       );
       const data = await response.json();
-      setMovie(data);
+      setMedia(data);
     }
     fetchMovieDetails();
     async function fetchMovieCredits() {
@@ -76,25 +76,25 @@ function MediaDetails(props) {
     fetchMovieCredits();
   }, []);
 
-  if (movie === null || credits === null) {
+  if (media === null || credits === null) {
     return <div>Loading...</div>;
   } else {
     return (
-      <div id="movie">
-        {movie.hasOwnProperty('first_air_date') ? (
+      <div id="media">
+        {media.hasOwnProperty('first_air_date') ? (
           <div>
-            <h1>{movie.name}</h1>
+            <h1>{media.name}</h1>
           </div>
         ) : (
           <div>
-            <h1>{movie.original_title}</h1>
+            <h1>{media.original_title}</h1>
           </div>
         )}
-        <p>{getReleaseDate(movie)}</p>
-        <p>{getRuntime(movie).toString()}</p>
-        <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt="movie-poster" />
-        <p id="overview">{movie.overview}</p>
-        {!movie.hasOwnProperty('first_air_date') ? (
+        <p>{getReleaseDate(media)}</p>
+        <p>{getRuntime(media).toString()}</p>
+        <img src={`https://image.tmdb.org/t/p/w500/${media.poster_path}`} alt="media-poster" />
+        <p id="overview">{media.overview}</p>
+        {!media.hasOwnProperty('first_air_date') ? (
           <div>
             <h2>Director(s)</h2>
             {directors.map((director) => (
@@ -108,18 +108,18 @@ function MediaDetails(props) {
         ) : (
           <div>
             <h2>Creator</h2>
-            <p>{movie.created_by[0].name}</p>
+            <p>{media.created_by[0].name}</p>
           </div>
         )}
         <h2>Stars</h2>
         {stars.map((star) => (
           <p key={star.id}>{star.name}</p>
         ))}
-        <button onClick={props.onClick}>Add to Watchlist</button>
-        {movie.hasOwnProperty('first_air_date') ? (
+        <button>Add to Watchlist</button>
+        {media.hasOwnProperty('first_air_date') ? (
           <div>
             <h2>Episodes</h2>
-            <p>{movie.number_of_episodes}</p>
+            <p>{media.number_of_episodes}</p>
           </div>
         ): (
           <div></div>
