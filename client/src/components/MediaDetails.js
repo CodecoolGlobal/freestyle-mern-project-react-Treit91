@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Episodes from './Episodes';
 
 function MediaDetails(props) {
   const [media, setMedia] = React.useState(null);
@@ -6,6 +7,7 @@ function MediaDetails(props) {
   const [directors, setDirectors] = React.useState([]);
   const [writers, setWriters] = React.useState([]);
   const [stars, setStars] = React.useState([]);
+  const [episodesClicked, setEpisodesClicked] = React.useState(false);
 
   const mediatype = props.media_type;
   const id = props.movieID;
@@ -27,6 +29,9 @@ function MediaDetails(props) {
   function getStars(cast) {
     const stars = [];
     for (let i = 0; i < 3; i++) {
+      if (cast[i] === undefined) {
+        break;
+      }
       stars.push(cast[i]);
     }
     setStars(stars);
@@ -84,48 +89,64 @@ function MediaDetails(props) {
   } else {
     return (
       <div id="media">
-        {media.hasOwnProperty('first_air_date') ? (
-          <div>
-            <h1>{media.name}</h1>
-          </div>
+        {!episodesClicked ? (
+          <>
+            <div>
+              {media.hasOwnProperty('first_air_date') ? (
+                <div>
+                  <h1>{media.name}</h1>
+                </div>
+              ) : (
+                <div>
+                  <h1>{media.original_title}</h1>
+                </div>
+              )}
+              <p>{getReleaseDate(media)}</p>
+              <p>{getRuntime(media).toString()}</p>
+            </div>
+            <div id="media-details">
+              <img src={`https://image.tmdb.org/t/p/w500/${media.poster_path}`} alt="media-poster" />
+              <p id="overview">{media.overview}</p>
+            </div>
+            <div id="media-credits">
+              {!media.hasOwnProperty('first_air_date') ? (
+                <div>
+                  <div>
+                    <h2>Director(s)</h2>
+                    {directors.map((director) => (
+                      <p key={director.id}>{director.name}</p>
+                    ))}
+                  </div>
+                  <div>
+                    <h2>Writer(s)</h2>
+                    {writers.map((writer) => (
+                      <p key={writer.id}>{writer.name}</p>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <h2>Creator</h2>
+                  <p>{media.created_by[0].name}</p>
+                </div>
+              )}
+              <div>
+                <h2>Stars</h2>
+                {stars.map((star) => (
+                  <p key={star.id}>{star.name}</p>
+                ))}
+              </div>
+              <button>Add to Watchlist</button>
+              {media.hasOwnProperty('first_air_date') ? (
+                <div onClick={() => setEpisodesClicked(true)}>
+                  <h2>Episodes</h2>
+                  <p>{media.number_of_episodes}</p>
+                </div>
+              ) : null}
+            </div>
+          </>
         ) : (
-          <div>
-            <h1>{media.original_title}</h1>
-          </div>
-        )}
-        <p>{getReleaseDate(media)}</p>
-        <p>{getRuntime(media).toString()}</p>
-        <img src={`https://image.tmdb.org/t/p/w500/${media.poster_path}`} alt="media-poster" />
-        <p id="overview">{media.overview}</p>
-        {!media.hasOwnProperty('first_air_date') ? (
-          <div>
-            <h2>Director(s)</h2>
-            {directors.map((director) => (
-              <p key={director.id}>{director.name}</p>
-            ))}
-            <h2>Writer(s)</h2>
-            {writers.map((writer) => (
-              <p key={writer.id}>{writer.name}</p>
-            ))}
-          </div>
-        ) : (
-          <div>
-            <h2>Creator</h2>
-            <p>{media.created_by[0].name}</p>
-          </div>
-        )}
-        <h2>Stars</h2>
-        {stars.map((star) => (
-          <p key={star.id}>{star.name}</p>
-        ))}
-        <button>Add to Watchlist</button>
-        {media.hasOwnProperty('first_air_date') ? (
-          <div>
-            <h2>Episodes</h2>
-            <p>{media.number_of_episodes}</p>
-          </div>
-        ): (
-          <div></div>
+          <Episodes  id={id}/>
         )}
       </div>
     );
