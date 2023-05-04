@@ -49,7 +49,7 @@ function LandingPage(props) {
   </div>
   </div>) : 
   <div>
-    <MediaDetails movieID={movie_id} media_type={mediatype} isLoggedIn ={IsLoggedIn}/>
+    <MediaDetails movieID={movie_id} media_type={mediatype} isLoggedIn ={IsLoggedIn} episodesClicked={props.episodesClicked} setEpisodesClicked={props.setEpisodesClicked}/>
   </div>
 )}
 //" <Balazs movieID ={movie_id} media_type = {mediatype}"/>

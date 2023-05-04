@@ -7,22 +7,17 @@ function MediaDetails(props) {
   const [directors, setDirectors] = React.useState([]);
   const [writers, setWriters] = React.useState([]);
   const [stars, setStars] = React.useState([]);
-  const [movietitle,setMovieTitle] = React.useState([])
-  const [episodesClicked, setEpisodesClicked] = React.useState(false);
+  const [movietitle, setMovieTitle] = React.useState([]);
 
   const mediatype = props.media_type;
   const id = props.movieID;
-  const IsLoggedIn = props.IsLoggedIn
-  const signUp = props.IsSignnedUp
+  const IsLoggedIn = props.IsLoggedIn;
+  const signUp = props.IsSignnedUp;
+  const episodesClicked = props.episodesClicked;
 
-
-  function addToWatchList(userID_or_name_idk){
-   mediatype === "tv" ? setMovieTitle(media.original_title) : setMovieTitle(media.name)
-   
-
-  
+  function addToWatchList(userID_or_name_idk) {
+    mediatype === 'tv' ? setMovieTitle(media.original_title) : setMovieTitle(media.name);
   }
-
 
   function getWritersAndDirectors(crew) {
     const directors = [];
@@ -138,8 +133,12 @@ function MediaDetails(props) {
                 </div>
               ) : (
                 <div>
-                  <h2>Creator</h2>
-                  <p>{media.created_by[0].name}</p>
+                  {media.created_by.length === 0 ? null : (
+                    <React.Fragment>
+                      <h2>Creator</h2>
+                      <p>{media.created_by[0].name}</p>
+                    </React.Fragment>
+                  )}
                 </div>
               )}
               <div>
@@ -148,9 +147,15 @@ function MediaDetails(props) {
                   <p key={star.id}>{star.name}</p>
                 ))}
               </div>
-              <button onClick={ () => { IsLoggedIn ? addToWatchList("userID or name idk"): window.alert("Please Login first !") } }>Add to Watchlist</button>
+              <button
+                onClick={() => {
+                  IsLoggedIn ? addToWatchList('userID or name idk') : window.alert('Please Login first !');
+                }}
+              >
+                Add to Watchlist
+              </button>
               {media.hasOwnProperty('first_air_date') ? (
-                <div onClick={() => setEpisodesClicked(true)}>
+                <div onClick={() => props.setEpisodesClicked(true)}>
                   <h2>Episodes</h2>
                   <p>{media.number_of_episodes}</p>
                 </div>
@@ -158,7 +163,7 @@ function MediaDetails(props) {
             </div>
           </>
         ) : (
-          <Episodes  id={id}/>
+          <Episodes id={id} />
         )}
       </div>
     );

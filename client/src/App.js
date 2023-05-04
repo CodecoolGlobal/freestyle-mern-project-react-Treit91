@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Register from './Register';
 import Login from './Login';
 import MediaDetails from './components/MediaDetails';
+import Profile from './components/Profile';
 
 function App() {
   const [search, setSearch] = useState('');
@@ -13,10 +14,12 @@ function App() {
   const [movieClicked, setMovieClick] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [signnedUp, setSignnedUp] = useState(false);
-  
+  const [loggedInUser, setLoggedInUser] = useState(null);
   const [dropdownClicked, setDropdownClicked] = useState(false);
   const [dropdownID, setDropdownID] = useState('');
   const [dropdownType, setDropdownType] = useState('');
+  const [episodesClicked, setEpisodesClicked] = useState(false);
+  const [profile, setProfile] = useState(false);
 
   function getMovieClicked() {
     setMovieClick(true);
@@ -38,11 +41,9 @@ function App() {
     setSearch(data);
   }
 
-
-
   return (
     <div className="app">
-      {signupstate || loginstate  ? null : (
+      {signupstate || loginstate ? null : (
         <div id="MovieDB">
           <div>
             <h1
@@ -50,6 +51,8 @@ function App() {
               onClick={() => {
                 setMovieClick(false);
                 setDropdownClicked(false);
+                setEpisodesClicked(false);
+                setProfile(false);
               }}
             >
               MovieDB
@@ -80,7 +83,7 @@ function App() {
                         }}
                       >
                         {movie.media_type === 'person' ? null : (
-                          <>
+                          <React.Fragment>
                             <li key={movie.id}></li>
                             {movie.poster_path ? (
                               <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt="movie"></img>
@@ -91,7 +94,7 @@ function App() {
                             ) : (
                               <p>{movie.release_date.split('-')[0]}</p>
                             )}
-                          </>
+                          </React.Fragment>
                         )}
                       </div>
                     ))
@@ -100,46 +103,83 @@ function App() {
             </div>
           </div>
           <div className="nav-buttons">
-            <button
-              className="login"
-              onClick={() => {
-                setSearch('');
-                setLoginState(true);
-                setSignupstate(false);
-              }}
-            >
-              Login
-            </button>
-            <button
-              className="sign_up"
-              onClick={() => {
-                setSearch('');
-                setSignupstate(true);
-                setLoginState(false);
-              }}
-            >
-              Sign Up
-            </button>
+            {loggedIn ? (
+              <React.Fragment>
+                <button
+                  className="profile"
+                  onClick={() => {
+                    setProfile(true);
+                  }}
+                >
+                  Profile
+                </button>
+                <button
+                  className="sign_out"
+                  onClick={() => {
+                    setLoggedInUser(null);
+                    setLoggedIn(false);
+                  }}
+                >
+                  Sign Out
+                </button>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <button
+                  className="login"
+                  onClick={() => {
+                    setSearch('');
+                    setLoginState(true);
+                    setSignupstate(false);
+                  }}
+                >
+                  Login
+                </button>
+                <button
+                  className="sign_up"
+                  onClick={() => {
+                    setSearch('');
+                    setSignupstate(true);
+                    setLoginState(false);
+                  }}
+                >
+                  Sign Up
+                </button>
+              </React.Fragment>
+            )}
           </div>
         </div>
       )}
 
-      {!signupstate && !loginstate && !dropdownClicked ? (
+      {!signupstate && !loginstate && !dropdownClicked && !profile ? (
         <div>
-          <LandingPage setmovieClicked={getMovieClicked} isMovieClicked={movieClicked} IsLoggedIn ={loggedIn} />
+          <LandingPage
+            setmovieClicked={getMovieClicked}
+            isMovieClicked={movieClicked}
+            IsLoggedIn={loggedIn}
+            episodesClicked={episodesClicked}
+            setEpisodesClicked={setEpisodesClicked}
+          />
         </div>
-      ) :  signupstate && !signnedUp ? (
+      ) : signupstate && !signnedUp ? (
         <div>
           <Register />
           <button onClick={() => setSignupstate(false)}>Cancel</button>
         </div>
       ) : loginstate ? (
         <div>
-          <Login setLoggedIn ={setLoggedIn}  />
-          <button onClick={() => setLoginState(false)} >Cancel</button>
+          <Login setLoggedIn={setLoggedIn} setLoginState={setLoginState} setLoggedInUser={setLoggedInUser} loggedInUser={loggedInUser} />
+          <button onClick={() => setLoginState(false)}>Cancel</button>
         </div>
       ) : dropdownClicked ? (
-        <MediaDetails movieID={dropdownID} media_type={dropdownType} />
+        <MediaDetails
+          movieID={dropdownID}
+          media_type={dropdownType}
+          episodesClicked={episodesClicked}
+          setEpisodesClicked={setEpisodesClicked}
+        />
+      ) : profile ? (
+        <Profile profile={loggedInUser}/>
       ) : null}
     </div>
   );
