@@ -9,6 +9,7 @@ const api_key = "2f3800bf22a943ae031e99ccee3c5628";
 const api_url = `https://api.themoviedb.org/3/trending/all/week?api_key=${api_key}`;
 
 function LandingPage(props) {
+  
 
   const trendingMovies = async () => {
     const response = await fetch(api_url)
@@ -26,6 +27,7 @@ function LandingPage(props) {
 
   const movieClicked = props.isMovieClicked;
   const getMovieClicked = props.setmovieClicked
+  const IsLoggedIn = props.IsLoggedIn
   
 
   return (
@@ -47,7 +49,7 @@ function LandingPage(props) {
   </div>
   </div>) : 
   <div>
-    <MediaDetails movieID={movie_id} media_type={mediatype}/>
+    <MediaDetails movieID={movie_id} media_type={mediatype} isLoggedIn ={IsLoggedIn}/>
   </div>
 )}
 //" <Balazs movieID ={movie_id} media_type = {mediatype}"/>

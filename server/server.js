@@ -21,7 +21,7 @@ app.post("/api/register", async (req, res) => {
     if (usernameFound) {
         res.json("username exists").status(500);
     } else if (emailFound) {
-        res.json("email exists").statusz(500);
+        res.json("email exists").status(500);
     } else {
         try {
             User.create({

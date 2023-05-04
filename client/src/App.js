@@ -11,6 +11,9 @@ function App() {
   const [signupstate, setSignupstate] = useState(false);
   const [loginstate, setLoginState] = useState(false);
   const [movieClicked, setMovieClick] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [signnedUp, setSignnedUp] = useState(false);
+  
   const [dropdownClicked, setDropdownClicked] = useState(false);
   const [dropdownID, setDropdownID] = useState('');
   const [dropdownType, setDropdownType] = useState('');
@@ -35,9 +38,11 @@ function App() {
     setSearch(data);
   }
 
+
+
   return (
     <div className="app">
-      {signupstate || loginstate ? null : (
+      {signupstate || loginstate  ? null : (
         <div id="MovieDB">
           <div>
             <h1
@@ -120,23 +125,17 @@ function App() {
 
       {!signupstate && !loginstate && !dropdownClicked ? (
         <div>
-          <LandingPage setmovieClicked={getMovieClicked} isMovieClicked={movieClicked} />
+          <LandingPage setmovieClicked={getMovieClicked} isMovieClicked={movieClicked} IsLoggedIn ={loggedIn} />
         </div>
-      ) : signupstate ? (
+      ) :  signupstate && !signnedUp ? (
         <div>
           <Register />
           <button onClick={() => setSignupstate(false)}>Cancel</button>
         </div>
       ) : loginstate ? (
         <div>
-          <Login />
-          <button
-            onClick={() => {
-              setLoginState(false);
-            }}
-          >
-            Cancel
-          </button>
+          <Login setLoggedIn ={setLoggedIn}  />
+          <button onClick={() => setLoginState(false)} >Cancel</button>
         </div>
       ) : dropdownClicked ? (
         <MediaDetails movieID={dropdownID} media_type={dropdownType} />
