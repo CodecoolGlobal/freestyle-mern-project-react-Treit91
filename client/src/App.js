@@ -10,10 +10,15 @@ function App() {
   const [signupstate, setSignupstate] = useState(false);
   const [loginstate, setLoginState] = useState(false);
   const [movieClicked, setMovieClick] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [signnedUp, setSignnedUp] = useState(false);
+  
 
   function getMovieClicked() {
     setMovieClick(true);
   }
+
+
 
   return (
     <div className="app">
@@ -22,7 +27,7 @@ function App() {
           Movie Database
         </h1>
       </div>
-      {signupstate || loginstate ? null : (
+      {signupstate || loginstate  ? null : (
         <div>
           <div className="nav-buttons">
             <button
@@ -52,17 +57,17 @@ function App() {
 
       {!signupstate && !loginstate ? (
         <div>
-          <LandingPage setmovieClicked={getMovieClicked} isMovieClicked={movieClicked} />
+          <LandingPage setmovieClicked={getMovieClicked} isMovieClicked={movieClicked} IsLoggedIn ={loggedIn} />
         </div>
-      ) : signupstate ? (
+      ) :  signupstate && !signnedUp ? (
         <div>
           <Register />
           <button onClick={() => setSignupstate(false)}>Cancel</button>
         </div>
       ) : loginstate ? (
         <div>
-          <Login />
-          <button onClick={() => setLoginState(false)}>Cancel</button>
+          <Login setLoggedIn ={setLoggedIn}  />
+          <button onClick={() => setLoginState(false)} >Cancel</button>
         </div>
       ) : null}
     </div>

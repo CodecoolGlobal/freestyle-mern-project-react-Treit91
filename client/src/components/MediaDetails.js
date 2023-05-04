@@ -6,9 +6,21 @@ function MediaDetails(props) {
   const [directors, setDirectors] = React.useState([]);
   const [writers, setWriters] = React.useState([]);
   const [stars, setStars] = React.useState([]);
+  const [movietitle,setMovieTitle] = React.useState([])
 
   const mediatype = props.media_type;
   const id = props.movieID;
+  const IsLoggedIn = props.IsLoggedIn
+  const signUp = props.IsSignnedUp
+
+
+  function addToWatchList(userID_or_name_idk){
+   mediatype === "tv" ? setMovieTitle(media.original_title) : setMovieTitle(media.name)
+   
+
+  
+  }
+
 
   function getWritersAndDirectors(crew) {
     const directors = [];
@@ -118,7 +130,7 @@ function MediaDetails(props) {
         {stars.map((star) => (
           <p key={star.id}>{star.name}</p>
         ))}
-        <button>Add to Watchlist</button>
+        <button onClick={ () => { IsLoggedIn ? addToWatchList("userID or name idk"): window.alert("Please Login first !") } }>Add to Watchlist</button>
         {media.hasOwnProperty('first_air_date') ? (
           <div>
             <h2>Episodes</h2>
