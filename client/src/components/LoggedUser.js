@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 
-export let getUser = () => {};
+export let getUser = null;
 export let setUser = null;
 export let refreshUser = null;
 
@@ -11,7 +11,7 @@ function LoggedUser() {
     const [loggedInUser, setLoggedInUser] = useState(null);
 
     getUser = () => {
-        console.log("LoggedUser")
+    
         return loggedInUser;
     }
 
@@ -32,11 +32,10 @@ function LoggedUser() {
         })
         const data = await res.json();
         setLoggedInUser(data.user);
+        console.log(data.user)
     }
 
-  return (
-    <div>Logged</div>
-  )
+  
 }
 
 export default LoggedUser 

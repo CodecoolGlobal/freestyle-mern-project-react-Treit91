@@ -1,11 +1,16 @@
 import React from 'react'
 import { useState } from 'react'
 
+export let getUser = null;
+export let setUser = null;
+export let refreshUser = null;
+
 function Login(props) {
   let IsLoggedIn = props.setLoggedIn;
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  
 
   const URL = "http://localhost:3001/api/login"
   const submitLogin = async () => {
@@ -24,10 +29,19 @@ function Login(props) {
         window.alert("User succesfully logged in !")
         setUserName(data.user);
         IsLoggedIn(true)
+        setLoggedInUser(data.user);
       } else if (data.succes !== true){
         window.alert("Invalid Username or Password");
       }  
   }
+
+  getUser = () => {
+  
+      return loggedInUser;
+  }
+
+  setUser = setLoggedInUser;
+  
   return (
     <>
       <div className='login'>

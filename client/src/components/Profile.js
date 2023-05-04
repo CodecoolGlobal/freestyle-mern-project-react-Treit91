@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import  { getUser } from './LoggedUser';
+import  { getUser } from './Login';
 
 function Profile() {
 
