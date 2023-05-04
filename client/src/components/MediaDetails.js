@@ -8,6 +8,7 @@ function MediaDetails(props) {
   const [writers, setWriters] = React.useState([]);
   const [stars, setStars] = React.useState([]);
   const [movietitle, setMovieTitle] = React.useState([]);
+  const [runtimeIfNoRuntimeInfo, setRuntimeIfNoRuntimeInfo] = React.useState(null);
 
   const mediatype = props.media_type;
   const id = props.movieID;
@@ -52,7 +53,7 @@ function MediaDetails(props) {
 
   function getReleaseDate(media) {
     if (media.hasOwnProperty('first_air_date')) {
-      if (media.hasOwnProperty('last_air_date')) {
+      if (media.status === 'Ended') {
         return `${media.first_air_date.split('-')[0]} - ${media.last_air_date.split('-')[0]}`;
       } else {
         return `${media.first_air_date.split('-')[0]} -`;
@@ -64,13 +65,25 @@ function MediaDetails(props) {
 
   function getRuntime(media) {
     if (media.hasOwnProperty('first_air_date')) {
-      return `${Math.max(...media.episode_run_time)} min`;
+      if (media.episode_run_time.length === 0) {
+        return `${runtimeIfNoRuntimeInfo} min`;
+      } else {
+        return `${Math.max(...media.episode_run_time)} min`;
+      }
     } else {
       return toHoursAndMinutes(media.runtime);
     }
   }
 
   useEffect(() => {
+    async function fetchRuntime() {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}/season/1?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
+      );
+      const data = await response.json();
+      setRuntimeIfNoRuntimeInfo(data.episodes[0].runtime);
+    }
+    fetchRuntime();
     async function fetchMovieDetails() {
       const response = await fetch(
         `https://api.themoviedb.org/3/${mediatype}/${id}?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
