@@ -1,13 +1,14 @@
 import React from 'react'
 import { useState } from 'react'
 
-function Login() {
+function Login(props) {
+  let IsLoggedIn = props.setLoggedIn;
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
+
   const URL = "http://localhost:3001/api/login"
   const submitLogin = async () => {
-    if (checkInputs()) {
       const res = await fetch(URL, {
         method: "POST",
         headers: {
@@ -20,23 +21,13 @@ function Login() {
       });
       const data = await res.json();
       if (data.succes === true) {
+        window.alert("User succesfully logged in !")
         setUserName(data.user);
-      } else window.alert(data);
-    }
+        IsLoggedIn(true)
+      } else if (data.succes !== true){
+        window.alert("Invalid Username or Password");
+      }  
   }
-
-  const checkInputs = () => {
-    if (userName.length < 3) {
-      window.alert("Username must be 3 character long!");
-      return false;
-    }
-    if (password.length < 3) {
-      window.alert("Password must be 3 character long!");
-      return false;
-    }
-    return true;
-  }
-
   return (
     <>
       <div className='login'>
@@ -52,7 +43,7 @@ function Login() {
               <input type='password' onChange={(e) => setPassword(e.target.value)} />
             </label>
           </div>
-          <button type='submit'>Sign in!</button>
+          <button type='submit'  >Sign in!</button>
         </form>
       </div>
     </>

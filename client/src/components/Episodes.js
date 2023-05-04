@@ -6,6 +6,8 @@ function Episodes(props) {
   const [selectedSeasonNumber, setSelectedSeasonNumber] = React.useState(1);
   const [selectedSeason, setSelectedSeason] = React.useState(null);
 
+  const id = props.id;
+
   function getSeasons(show) {
     const seasons = [];
     for (let i = 1; i <= show.number_of_seasons; i++) {
@@ -28,7 +30,7 @@ function Episodes(props) {
   useEffect(() => {
     async function fetchShowDetails() {
       const response = await fetch(
-        `https://api.themoviedb.org/3/tv/1396?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
+        `https://api.themoviedb.org/3/tv/${id}?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
       );
       const data = await response.json();
       setShow(data);
@@ -37,13 +39,13 @@ function Episodes(props) {
     fetchShowDetails();
     async function fetchSelectedSeason() {
       const response = await fetch(
-        `https://api.themoviedb.org/3/tv/1396/season/${selectedSeasonNumber}?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
+        `https://api.themoviedb.org/3/tv/${id}/season/${selectedSeasonNumber}?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
       );
       const data = await response.json();
       setSelectedSeason(data);
     }
     fetchSelectedSeason();
-  }, [selectedSeasonNumber]);
+  }, [selectedSeasonNumber, id]);
 
   if (!show) {
     return <div>Loading...</div>;

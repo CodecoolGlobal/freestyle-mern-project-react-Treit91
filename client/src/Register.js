@@ -39,7 +39,6 @@ function Register() {
 
     const checkDetails = () => {
         if (firstName.length < 3) {
-            console.log(firstName.length);
             window.alert("First name must be at least 3 characters long!");
             return false;
         }
