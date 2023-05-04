@@ -61,6 +61,7 @@ function App() {
               className="input"
               onChange={(e) => {
                 searchFetch(e.target.value);
+                document.querySelector('.dropdown').style.display = 'block';
               }}
               placeholder="Search..."
             />
