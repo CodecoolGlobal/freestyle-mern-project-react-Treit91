@@ -110,7 +110,7 @@ function MediaDetails(props) {
                 </div>
               ) : (
                 <div>
-                  <h1>{media.original_title}</h1>
+                  <h1>{media.title}</h1>
                 </div>
               )}
               <p>{getReleaseDate(media)}</p>
