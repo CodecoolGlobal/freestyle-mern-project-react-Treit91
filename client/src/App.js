@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import LandingPage from './LandingPage';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Register from './Register';
 import Login from './Login';
 import MediaDetails from './components/MediaDetails';
@@ -20,10 +20,22 @@ function App() {
   const [dropdownType, setDropdownType] = useState('');
   const [episodesClicked, setEpisodesClicked] = useState(false);
   const [profile, setProfile] = useState(false);
+  const [jwt, setJwt] = useState(null);
 
   function getMovieClicked() {
     setMovieClick(true);
   }
+
+  useEffect(() => {
+    const signedInUser = localStorage.getItem('user');
+    console.log(JSON.parse(signedInUser));
+    if (signedInUser) {
+      const foundUser = JSON.parse(signedInUser);
+      setLoggedInUser(foundUser.username);
+      setJwt(foundUser.token);
+      setLoggedIn(true);
+    };
+  }, []);
 
   function setInputValueToDefault() {
     if (document.querySelector('.input').value !== '') {
@@ -120,6 +132,7 @@ function App() {
                     setLoggedInUser(null);
                     setLoggedIn(false);
                     setProfile(false);
+                    localStorage.clear();
                   }}
                 >
                   Sign Out
@@ -171,7 +184,13 @@ function App() {
         </div>
       ) : loginstate ? (
         <div>
-          <Login setLoggedIn={setLoggedIn} setLoginState={setLoginState} setLoggedInUser={setLoggedInUser} loggedInUser={loggedInUser} />
+          <Login
+            setLoggedIn={setLoggedIn}
+            setLoginState={setLoginState}
+            setLoggedInUser={setLoggedInUser}
+            loggedInUser={loggedInUser}
+            setJwt={setJwt}
+          />
           <button onClick={() => setLoginState(false)}>Cancel</button>
         </div>
       ) : dropdownClicked ? (
@@ -182,7 +201,7 @@ function App() {
           setEpisodesClicked={setEpisodesClicked}
         />
       ) : profile ? (
-        <Profile profile={loggedInUser}/>
+        <Profile profile={loggedInUser} jwt={jwt} />
       ) : null}
     </div>
   );

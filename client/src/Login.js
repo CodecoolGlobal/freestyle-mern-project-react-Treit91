@@ -25,13 +25,15 @@ function Login(props) {
       }),
     });
     const data = await res.json();
-    if (data.succes === true) {
+    if (data.success === true) {
       window.alert('User succesfully logged in !');
       setUserName(data.user);
       IsLoggedIn(true);
-      setLoggedInUser(data.user);
+      setLoggedInUser(data.data.username);
       props.setLoginState(false);
-    } else if (data.succes !== true) {
+      props.setJwt(data.data.token);
+      localStorage.setItem('user', JSON.stringify(data.data));
+    } else if (data.success !== true) {
       window.alert('Invalid Username or Password');
     }
   };
