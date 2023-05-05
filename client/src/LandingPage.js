@@ -37,7 +37,7 @@ function LandingPage(props) {
   <div className='container'>
   {trending.map((movie) => {
     return (
-   <div className='movies' key={movie.id}   onClick={() => { getMovieClicked(); setMovie_ID(movie.id);setMediaType(movie.media_type) }}>
+   <div className='movies' key={movie.id}   onClick={() => { getMovieClicked(); setMovie_ID(movie.id);setMediaType(movie.media_type); props.setSearch(''); document.querySelector('input').value = '';}}>
     <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt='movieimg'  />
     <h2>{movie.name}</h2>
     <h2>{movie.title}</h2>

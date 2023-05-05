@@ -77,6 +77,7 @@ function App() {
                         key={movie.id}
                         onClick={() => {
                           setInputValueToDefault();
+                          setEpisodesClicked(false);
                           setDropdownClicked(true);
                           setDropdownID(movie.id);
                           setDropdownType(movie.media_type);
@@ -118,6 +119,7 @@ function App() {
                   onClick={() => {
                     setLoggedInUser(null);
                     setLoggedIn(false);
+                    setProfile(false);
                   }}
                 >
                   Sign Out
@@ -159,6 +161,7 @@ function App() {
             IsLoggedIn={loggedIn}
             episodesClicked={episodesClicked}
             setEpisodesClicked={setEpisodesClicked}
+            setSearch={setSearch}
           />
         </div>
       ) : signupstate && !signnedUp ? (

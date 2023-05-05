@@ -83,7 +83,9 @@ function MediaDetails(props) {
       const data = await response.json();
       setRuntimeIfNoRuntimeInfo(data.episodes[0].runtime);
     }
-    fetchRuntime();
+    if (mediatype === 'tv') {
+      fetchRuntime();
+    }
     async function fetchMovieDetails() {
       const response = await fetch(
         `https://api.themoviedb.org/3/${mediatype}/${id}?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
