@@ -108,3 +108,13 @@ app.patch('/user/:username', (req, res) => {
     .then((result) => res.status(200).json(result))
     .catch((error) => console.error(error));
 });
+
+app.delete('/api/delete/:id', async (req, res) => {
+  try{
+      await User.deleteOne({_id: req.params.id});
+      res.sendStatus(200);
+  }catch(e) {
+      console.error(e.message);
+      res.sendStatus(500);
+  }
+});
