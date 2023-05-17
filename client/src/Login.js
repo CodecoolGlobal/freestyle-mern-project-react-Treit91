@@ -6,11 +6,11 @@ export let setUser;
 export let refreshUser;
 
 function Login(props) {
-  let IsLoggedIn = props.setLoggedIn;
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const loggedInUser = props.loggedInUser;
   const setLoggedInUser = props.setLoggedInUser;
+  let setLoggedIn= props.setLoggedIn;
 
   const URL = 'http://localhost:3001/api/login';
   const submitLogin = async () => {
@@ -28,7 +28,7 @@ function Login(props) {
     if (data.success === true) {
       window.alert('User succesfully logged in !');
       setUserName(data.user);
-      IsLoggedIn(true);
+      setLoggedIn(true);
       setLoggedInUser(data.data.username);
       props.setLoginState(false);
       props.setJwt(data.data.token);

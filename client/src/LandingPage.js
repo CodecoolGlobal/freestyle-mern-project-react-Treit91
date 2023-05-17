@@ -8,6 +8,7 @@ import MediaDetails from './components/MediaDetails';
 const api_key = "2f3800bf22a943ae031e99ccee3c5628";
 const api_url = `https://api.themoviedb.org/3/trending/all/week?api_key=${api_key}`;
 
+
 function LandingPage(props) {
   
 
@@ -27,8 +28,8 @@ function LandingPage(props) {
 
   const movieClicked = props.isMovieClicked;
   const getMovieClicked = props.setmovieClicked
-  const IsLoggedIn = props.IsLoggedIn
-  
+  const loggedIn = props.loggedIn
+  const username = props.username
 
   return (
     !movieClicked ? (
@@ -49,9 +50,9 @@ function LandingPage(props) {
   </div>
   </div>) : 
   <div>
-    <MediaDetails movieID={movie_id} media_type={mediatype} isLoggedIn ={IsLoggedIn} episodesClicked={props.episodesClicked} setEpisodesClicked={props.setEpisodesClicked}/>
+    <MediaDetails movieID={movie_id} media_type={mediatype} loggedIn ={loggedIn} episodesClicked={props.episodesClicked} setEpisodesClicked={props.setEpisodesClicked} username={username}/>
   </div>
 )}
-//" <Balazs movieID ={movie_id} media_type = {mediatype}"/>
+
 
 export default LandingPage;

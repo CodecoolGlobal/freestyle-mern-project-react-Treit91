@@ -9,7 +9,12 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  watchlist: Object,
+  watchlist:[{
+    id: String,
+    mediatype:String,
+    name:String,
+    img:String,
+  }],
   registeredAt: Date,
 });
 

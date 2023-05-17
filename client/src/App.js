@@ -171,10 +171,11 @@ function App() {
           <LandingPage
             setmovieClicked={getMovieClicked}
             isMovieClicked={movieClicked}
-            IsLoggedIn={loggedIn}
+            loggedIn = {loggedIn}
             episodesClicked={episodesClicked}
             setEpisodesClicked={setEpisodesClicked}
             setSearch={setSearch}
+            username={loggedInUser}
           />
         </div>
       ) : signupstate && !signnedUp ? (
@@ -191,6 +192,7 @@ function App() {
             loggedInUser={loggedInUser}
             setJwt={setJwt}
           />
+          
           <button onClick={() => setLoginState(false)}>Cancel</button>
         </div>
       ) : dropdownClicked ? (
@@ -199,6 +201,8 @@ function App() {
           media_type={dropdownType}
           episodesClicked={episodesClicked}
           setEpisodesClicked={setEpisodesClicked}
+          loggedIn = {loggedIn}
+          username={loggedInUser}
         />
       ) : profile ? (
         <Profile profile={loggedInUser} jwt={jwt} />

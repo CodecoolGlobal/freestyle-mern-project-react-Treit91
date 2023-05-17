@@ -7,18 +7,54 @@ function MediaDetails(props) {
   const [directors, setDirectors] = React.useState([]);
   const [writers, setWriters] = React.useState([]);
   const [stars, setStars] = React.useState([]);
-  const [movietitle, setMovieTitle] = React.useState([]);
   const [runtimeIfNoRuntimeInfo, setRuntimeIfNoRuntimeInfo] = React.useState(null);
+  const [inWatchlist, setInWatchlist] = React.useState(false)
+
 
   const mediatype = props.media_type;
   const id = props.movieID;
-  const IsLoggedIn = props.IsLoggedIn;
+  const loggedIn = props.loggedIn;
   const signUp = props.IsSignnedUp;
   const episodesClicked = props.episodesClicked;
+  const username = props.username
 
-  function addToWatchList(userID_or_name_idk) {
-    mediatype === 'tv' ? setMovieTitle(media.original_title) : setMovieTitle(media.name);
+ console.log(id)
+  const handleWatchlist = async () => {
+    const addToWatchList = await fetch(`http://localhost:3001/api/watchlist/${username}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id:`${id}`,
+        mediatype: `${mediatype}`,
+        name:`${media.title}`,
+        img: `https://image.tmdb.org/t/p/w500/${media.poster_path}`
+      })
+    }).then(() => {
+      setInWatchlist(true)
+      return addToWatchList.json()
+    })
   }
+
+
+  const deleteWathlist = async () => {
+    try {
+      const deleteMovie = await fetch(`http://localhost:3001/api/watchlist/${username}/${id}`, {
+        method: "DELETE",
+        headers:{ 
+          "Content-Type":"application/json"
+        },
+      });
+      setInWatchlist(false);
+      const deletedMovie = await deleteMovie.json();
+      return deletedMovie;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
 
   function getWritersAndDirectors(crew) {
     const directors = [];
@@ -76,6 +112,26 @@ function MediaDetails(props) {
   }
 
   useEffect(() => {
+    async function fetchWatchlist() {
+      try {
+        const response = await fetch(`http://localhost:3001/api/watchlist/${username}`);
+          const data = await response.json();
+          console.log(data)
+          const watchlist = data.watchlist; 
+          const isInWatchlist = watchlist.some((item) => item.id === id);// this looks if any object has that specific id 
+          console.log(isInWatchlist)
+          setInWatchlist(isInWatchlist);
+      } catch (error) {
+        console.log('Error fetching watchlist:', error);
+      }
+    }
+  
+    fetchWatchlist();
+  }, [username, id]);
+
+
+
+  useEffect(() => {
     async function fetchRuntime() {
       const response = await fetch(
         `https://api.themoviedb.org/3/tv/${id}/season/1?api_key=2f3800bf22a943ae031e99ccee3c5628&language=en-US`,
@@ -93,6 +149,8 @@ function MediaDetails(props) {
       const data = await response.json();
       setMedia(data);
     }
+
+
     fetchMovieDetails();
     async function fetchMovieCredits() {
       const response = await fetch(
@@ -104,7 +162,9 @@ function MediaDetails(props) {
       getStars(data.cast);
     }
     fetchMovieCredits();
-  }, [mediatype, id]);
+
+
+  }, [mediatype, id, inWatchlist,username]);
 
   if (media === null || credits === null) {
     return <div>Loading...</div>;
@@ -162,13 +222,21 @@ function MediaDetails(props) {
                   <p key={star.id}>{star.name}</p>
                 ))}
               </div>
-              <button
-                onClick={() => {
-                  IsLoggedIn ? addToWatchList('userID or name idk') : window.alert('Please Login first !');
-                }}
-              >
-                Add to Watchlist
-              </button>
+              {
+                <button
+                  onClick={() => {
+                    if (loggedIn &&  !inWatchlist) {
+                      handleWatchlist()
+                    } else if(!loggedIn) {
+                      window.alert('Please Login first !')
+                    }else if (loggedIn &&  inWatchlist) {
+                      deleteWathlist()
+                    }
+                  }}
+                >
+                  {inWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                </button>
+              }
               {media.hasOwnProperty('first_air_date') ? (
                 <div onClick={() => props.setEpisodesClicked(true)}>
                   <h2>Episodes</h2>
