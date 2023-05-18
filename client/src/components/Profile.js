@@ -9,11 +9,10 @@ function Profile(props) {
   const [changePassword, setChangePassword] = useState('');
   const [changeConfirmPassword, setChangeConfirmPassword] = useState('');
   const [userDetails, setUserDetails] = useState(null);
-  const [watchlist, setInWatchlist] = useState([])
-  const [remove,setRemove] = useState(false)
-  const [movieID,setMovieID]= useState("")
-  const [mediatype,setMediaType]= useState("")
-
+  const [watchlist, setInWatchlist] = useState([]);
+  const [remove, setRemove] = useState(false);
+  const [movieID, setMovieID] = useState('');
+  const [mediatype, setMediaType] = useState('');
 
   const URL = `http://localhost:3000/user/${loggedInUser.username}`;
 
@@ -42,19 +41,17 @@ function Profile(props) {
   useEffect(() => {
     async function fetchWatchlist() {
       try {
-        const response = await fetch(`http://localhost:3001/api/watchlist/${userDetails.username}`)
-        const data = await response.json()
-        setInWatchlist(data.watchlist)
+        const response = await fetch(`http://localhost:3001/api/watchlist/${userDetails.username}`);
+        const data = await response.json();
+        console.log(userDetails)
+        setInWatchlist(data.watchlist);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
 
-    fetchWatchlist()
-
-  }, [userDetails])
-
-
+    fetchWatchlist();
+  }, [userDetails]);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/profile', {
@@ -70,11 +67,11 @@ function Profile(props) {
 
   if (!userDetails) {
     return <div>Loading...</div>;
-
-  } else if (remove){
- return <MediaDetails   movieID={movieID}
- media_type={mediatype}  username={userDetails.username} loggedInUser={true}/>
-  }else if(userDetails) {
+  } else if (remove) {
+    return (
+      <MediaDetails movieID={movieID} media_type={mediatype} username={userDetails.username} loggedInUser={true} />
+    );
+  } else if (userDetails) {
     return (
       <>
         <div className="profileContainer">
@@ -108,27 +105,34 @@ function Profile(props) {
               <p className="userDetails">Email: {userDetails.email}</p>
             </div>
           </div>
+
+          {watchlist.length > 0 ? (
+            <div id="trendingContainer2">
+              <h1 id="trending">Your Watchlist:</h1>
+              <div className="container">
+                {watchlist.map((movie) => {
+                  return (
+                    <div
+                      className="movies"
+                      key={movie.id}
+                      onClick={() => {
+                        setRemove(true);
+                        setMovieID(movie.id);
+                        setMediaType(movie.mediatype);
+                      }}
+                    >
+                      <img src={`https://image.tmdb.org/t/p/w500/${movie.img}`} alt="movieimg" />
+                      <h2>{movie.name}</h2>
+                      <h2>{movie.title}</h2>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <p>No movie added to your watchlist</p>
+          )}
         </div>
-        { watchlist.length > 0 ? (
-        <div id="trendingContainer">
-          <h1 id="trending">Your Watchlist:</h1>
-          <div className="container">
-            {watchlist.map((movie) => {
-              return (
-                <div
-                  className="movies"
-                  key={movie.id}
-                  onClick={()=> {setRemove(true); setMovieID(movie.id); setMediaType(movie.mediatype)}}>
-                  <img src={`https://image.tmdb.org/t/p/w500/${movie.img}`} alt="movieimg" />
-                  <h2>{movie.name}</h2>
-                  <h2>{movie.title}</h2>
-                </div>
-              );
-            })}
-          </div>
-        </div>): 
-        <p>No movie added to your watchlist</p>
-  }
       </>
     );
   }
