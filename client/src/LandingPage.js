@@ -24,6 +24,8 @@ function LandingPage(props) {
   const movieClicked = props.isMovieClicked;
   const getMovieClicked = props.setmovieClicked;
   const IsLoggedIn = props.IsLoggedIn;
+  const loggedIn = props.loggedIn;
+  const username = props.username;
 
   return !movieClicked ? (
     <div id="trendingContainer">
@@ -63,6 +65,8 @@ function LandingPage(props) {
         isLoggedIn={IsLoggedIn}
         episodesClicked={props.episodesClicked}
         setEpisodesClicked={props.setEpisodesClicked}
+        loggedIn={loggedIn}
+        username={username}
       />
     </div>
   );

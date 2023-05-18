@@ -6,13 +6,13 @@ export let setUser;
 export let refreshUser;
 
 function Login(props) {
-  let IsLoggedIn = props.setLoggedIn;
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [loginPopup, setLoginPopup] = useState(false);
   const [invalidPopup, setInvalidPopup] = useState(false);
   const loggedInUser = props.loggedInUser;
   const setLoggedInUser = props.setLoggedInUser;
+  let setLoggedIn= props.setLoggedIn;
 
   const URL = 'http://localhost:3001/api/login';
   const submitLogin = async () => {
@@ -30,7 +30,7 @@ function Login(props) {
     if (data.success === true) {
       setLoginPopup(true);
       setUserName(data.user);
-      IsLoggedIn(true);
+      setLoggedIn(true);
       setLoggedInUser(data.data.username);
       setTimeout(() => {
         props.setLoginState(false);

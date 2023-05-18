@@ -173,10 +173,11 @@ function App() {
           <LandingPage
             setmovieClicked={getMovieClicked}
             isMovieClicked={movieClicked}
-            IsLoggedIn={loggedIn}
+            loggedIn = {loggedIn}
             episodesClicked={episodesClicked}
             setEpisodesClicked={setEpisodesClicked}
             setSearch={setSearch}
+            username={loggedInUser}
           />
         </React.Fragment>
       ) : signupstate && !signnedUp ? (
@@ -195,6 +196,8 @@ function App() {
           media_type={dropdownType}
           episodesClicked={episodesClicked}
           setEpisodesClicked={setEpisodesClicked}
+          loggedIn = {loggedIn}
+          username={loggedInUser}
         />
       ) : profile ? (
         <Profile profile={loggedInUser} jwt={jwt} />
