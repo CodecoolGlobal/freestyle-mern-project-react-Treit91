@@ -9,18 +9,32 @@ function MediaDetails(props) {
   const [stars, setStars] = React.useState([]);
   const [runtimeIfNoRuntimeInfo, setRuntimeIfNoRuntimeInfo] = React.useState(null);
   const [inWatchlist, setInWatchlist] = React.useState(false)
-
-
+  
+  
   const mediatype = props.media_type;
   const id = props.movieID;
   const loggedIn = props.loggedIn;
   const signUp = props.IsSignnedUp;
   const episodesClicked = props.episodesClicked;
   const username = props.username
+  
+  async function fetchWatchlist() {
+    try {
+      const response = await fetch(`http://localhost:3001/api/watchlist/${username}`);
+        const data = await response.json();
+        console.log(data)
+        const watchlist = data.watchlist; 
+        const isInWatchlist = watchlist.some((item) => item.id === String(id));// this looks if any object has that specific id 
+        console.log(isInWatchlist)
+        setInWatchlist(isInWatchlist);
+    } catch (error) {
+      console.log('Error fetching watchlist:', error);
+    }
+  }
 
- console.log(id)
+ 
   const handleWatchlist = async () => {
-    const addToWatchList = await fetch(`http://localhost:3001/api/watchlist/${username}`, {
+   await fetch(`http://localhost:3001/api/watchlist/${username}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -31,30 +45,19 @@ function MediaDetails(props) {
         name:`${media.title}`,
         img: `https://image.tmdb.org/t/p/w500/${media.poster_path}`
       })
-    }).then(() => {
-      setInWatchlist(true)
-      return addToWatchList.json()
     })
+     await fetchWatchlist()
   }
 
 
-  const deleteWathlist = async () => {
-    try {
-      const deleteMovie = await fetch(`http://localhost:3001/api/watchlist/${username}/${id}`, {
+  const deleteWathlist =  () => {
+   fetch(`http://localhost:3001/api/watchlist/${username}/${id}`, {
         method: "DELETE",
         headers:{ 
           "Content-Type":"application/json"
         },
-      });
-      setInWatchlist(false);
-      const deletedMovie = await deleteMovie.json();
-      return deletedMovie;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-
+      }).then(()=> fetchWatchlist())
+    }     
 
   function getWritersAndDirectors(crew) {
     const directors = [];
@@ -110,24 +113,11 @@ function MediaDetails(props) {
       return toHoursAndMinutes(media.runtime);
     }
   }
+  
 
   useEffect(() => {
-    async function fetchWatchlist() {
-      try {
-        const response = await fetch(`http://localhost:3001/api/watchlist/${username}`);
-          const data = await response.json();
-          console.log(data)
-          const watchlist = data.watchlist; 
-          const isInWatchlist = watchlist.some((item) => item.id === id);// this looks if any object has that specific id 
-          console.log(isInWatchlist)
-          setInWatchlist(isInWatchlist);
-      } catch (error) {
-        console.log('Error fetching watchlist:', error);
-      }
-    }
-  
     fetchWatchlist();
-  }, [username, id]);
+  }, []);
 
 
 
@@ -252,5 +242,6 @@ function MediaDetails(props) {
     );
   }
 }
+
 
 export default MediaDetails;
