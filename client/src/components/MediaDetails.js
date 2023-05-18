@@ -18,6 +18,8 @@ function MediaDetails(props) {
   const episodesClicked = props.episodesClicked;
   const username = props.username;
 
+
+  console.log(mediatype)
   async function fetchWatchlist() {
     try {
       const response = await fetch(`http://localhost:3001/api/watchlist/${username}`);
