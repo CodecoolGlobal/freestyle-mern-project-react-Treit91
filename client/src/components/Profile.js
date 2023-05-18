@@ -69,7 +69,7 @@ function Profile(props) {
     return <div>Loading...</div>;
   } else if (remove) {
     return (
-      <MediaDetails movieID={movieID} media_type={mediatype} username={userDetails.username} loggedInUser={true} />
+      <MediaDetails movieID={movieID} media_type={mediatype} username={userDetails.username} loggedIn={true} />
     );
   } else if (userDetails) {
     return (
