@@ -131,7 +131,6 @@ app.get("/api/watchlist/:username", async (req, res) => {
 })
 
 app.post("/api/watchlist/:username", async (req, res) => {
-  console.log(req.body);
   try {
     const user = await User.findOne({ username: req.params.username });
     user.watchlist.push(req.body);

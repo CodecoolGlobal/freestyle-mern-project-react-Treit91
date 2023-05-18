@@ -22,10 +22,8 @@ function MediaDetails(props) {
     try {
       const response = await fetch(`http://localhost:3001/api/watchlist/${username}`);
       const data = await response.json();
-      console.log(data);
       const watchlist = data.watchlist;
       const isInWatchlist = watchlist.some((item) => item.id === String(id)); // this looks if any object has that specific id
-      console.log(isInWatchlist);
       setInWatchlist(isInWatchlist);
     } catch (error) {
       console.log('Error fetching watchlist:', error);

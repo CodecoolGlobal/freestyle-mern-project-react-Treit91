@@ -42,7 +42,6 @@ function Profile(props) {
       .then((res) => res.json())
       .then((data) => {
         setUserDetails(data.user.user);
-        console.log(data);
       });
   }, [props.jwt]);
 
