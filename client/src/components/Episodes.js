@@ -53,8 +53,7 @@ function Episodes(props) {
     return (
       <div className="episodes" key={show.id}>
         <div className="showDetails">
-          <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt="show-poster" />
-          <h1 className="showTitle">{show.name}</h1>
+          <h1 className="showTitle" onClick={() => props.setEpisodesClicked(false)}>{show.name}</h1>
           <p>{getAiringDate(show)}</p>
         </div>
         <select onChange={e => setSelectedSeasonNumber(e.target.value)}>

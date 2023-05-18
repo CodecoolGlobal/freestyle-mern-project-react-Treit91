@@ -9,6 +9,7 @@ function MediaDetails(props) {
   const [stars, setStars] = React.useState([]);
   const [movietitle, setMovieTitle] = React.useState([]);
   const [runtimeIfNoRuntimeInfo, setRuntimeIfNoRuntimeInfo] = React.useState(null);
+  const [popup, setPopup] = React.useState(false);
 
   const mediatype = props.media_type;
   const id = props.movieID;
@@ -132,7 +133,7 @@ function MediaDetails(props) {
             </div>
             <div id="media-credits">
               {!media.hasOwnProperty('first_air_date') ? (
-                <div>
+                <React.Fragment>
                   <div>
                     <h2>Director(s)</h2>
                     {directors.map((director) => (
@@ -145,7 +146,7 @@ function MediaDetails(props) {
                       <p key={writer.id}>{writer.name}</p>
                     ))}
                   </div>
-                </div>
+                </React.Fragment>
               ) : (
                 <div>
                   {media.created_by.length === 0 ? null : (
@@ -162,23 +163,32 @@ function MediaDetails(props) {
                   <p key={star.id}>{star.name}</p>
                 ))}
               </div>
-              <button
-                onClick={() => {
-                  IsLoggedIn ? addToWatchList('userID or name idk') : window.alert('Please Login first !');
-                }}
-              >
-                Add to Watchlist
-              </button>
               {media.hasOwnProperty('first_air_date') ? (
                 <div onClick={() => props.setEpisodesClicked(true)}>
                   <h2>Episodes</h2>
                   <p>{media.number_of_episodes}</p>
                 </div>
               ) : null}
+              <button
+                onClick={() => {
+                  IsLoggedIn ? addToWatchList('userID or name idk') : setPopup(true); setTimeout(() => {
+                    setPopup(false);
+                  }, 1500);
+                }}
+              >
+                Add to Watchlist
+              </button>
             </div>
+            {popup ? (
+                    <div className="popup-container">
+                      <div className="popup-body">
+                        <h1>Please login first!</h1>
+                      </div>
+                    </div>
+                  ) : null}
           </>
         ) : (
-          <Episodes id={id} />
+          <Episodes id={id} setEpisodesClicked={props.setEpisodesClicked} />
         )}
       </div>
     );

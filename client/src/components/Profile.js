@@ -37,13 +37,13 @@ function Profile(props) {
     fetch('http://localhost:3001/api/profile', {
       headers: {
         Authorization: `Bearer ${props.jwt}`,
-      }
+      },
     })
       .then((res) => res.json())
       .then((data) => {
         setUserDetails(data.user.user);
         console.log(data);
-      })
+      });
   }, [props.jwt]);
 
   if (!userDetails) {
@@ -75,8 +75,8 @@ function Profile(props) {
               </label>
               <button onClick={submit}>Submit your changes</button>
             </div>
-            <p>Your profile</p>
-            <div className="userDetails">
+            <div className="userDetailsDiv">
+              <p>Your profile</p>
               <p className="userDetails">First name: {userDetails.name.first}</p>
               <p className="userDetails">Last name: {userDetails.name.last}</p>
               <p className="userDetails">Email: {userDetails.email}</p>

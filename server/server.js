@@ -19,9 +19,9 @@ app.post('/api/register', async (req, res) => {
   const usernameFound = await User.findOne({ username: req.body.username });
   const emailFound = await User.findOne({ email: req.body.email });
   if (usernameFound) {
-    res.json('username exists').status(500);
+    res.json('username exists').status(200);
   } else if (emailFound) {
-    res.json('email exists').status(500);
+    res.json('email exists').status(200);
   } else {
     try {
       User.create({
@@ -53,7 +53,6 @@ app.post('/api/login', async (req, res) => {
       } else {
         let token;
         try {
-          //Creating jwt token
           token = jwt.sign({ username: user.username }, 'secretkeyappearshere', {
             expiresIn: '1h',
           });
@@ -73,14 +72,13 @@ app.post('/api/login', async (req, res) => {
       }
     });
   } else {
-    res.json("Username doesn't exists!", { success: false }).status(500);
+    res.status(200).json({ success: false });
   }
 });
 
 app.get('/api/profile', async (req, res) => {
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(' ')[1];
-    //Decoding the token
     try{
         const decodedToken = jwt.verify(token, 'secretkeyappearshere');
         const user = await User.findOne({ username: decodedToken.username });

@@ -9,6 +9,8 @@ function Login(props) {
   let IsLoggedIn = props.setLoggedIn;
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [loginPopup, setLoginPopup] = useState(false);
+  const [invalidPopup, setInvalidPopup] = useState(false);
   const loggedInUser = props.loggedInUser;
   const setLoggedInUser = props.setLoggedInUser;
 
@@ -26,15 +28,21 @@ function Login(props) {
     });
     const data = await res.json();
     if (data.success === true) {
-      window.alert('User succesfully logged in !');
+      setLoginPopup(true);
       setUserName(data.user);
       IsLoggedIn(true);
       setLoggedInUser(data.data.username);
-      props.setLoginState(false);
+      setTimeout(() => {
+        props.setLoginState(false);
+        setLoginPopup(false);
+      }, 1500);
       props.setJwt(data.data.token);
       localStorage.setItem('user', JSON.stringify(data.data));
     } else if (data.success !== true) {
-      window.alert('Invalid Username or Password');
+      setInvalidPopup(true);
+      setTimeout(() => {
+        setInvalidPopup(false);
+      }, 1000);
     }
   };
 
@@ -45,32 +53,45 @@ function Login(props) {
   };
 
   return (
-    <>
-      <div className="login">
-        <p>Please sign in!</p>
-        <form
-          className="loginForm"
-          onSubmit={(e) => {
-            e.preventDefault();
-            submitLogin();
-          }}
-        >
-          <div className="userInput">
-            <label>
-              Username:
-              <input type="text" onChange={(e) => setUserName(e.target.value)} />
-            </label>
-          </div>
-          <div className="userInput">
-            <label>
-              Password:
-              <input type="password" onChange={(e) => setPassword(e.target.value)} />
-            </label>
-          </div>
+    <div className="loginContainer">
+      <form
+        className="loginForm"
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitLogin();
+        }}
+      >
+        <div className="loginTitle">
+          <p>Please sign in!</p>
+        </div>
+        <div className="userInput">
+          <label>Username:</label>
+          <input type="text" onChange={(e) => setUserName(e.target.value)} />
+        </div>
+        <div className="userInput">
+          <label>Password:</label>
+          <input type="password" onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div className="loginButtons">
           <button type="submit">Sign in!</button>
-        </form>
-      </div>
-    </>
+          <button onClick={() => props.setLoginState(false)}>Cancel</button>
+        </div>
+      </form>
+      {loginPopup ? (
+        <div className="popup-container">
+          <div className="popup-body">
+            <h1>Succesfully logged in</h1>
+          </div>
+        </div>
+      ) : null}
+      {invalidPopup ? (
+        <div className="popup-container">
+          <div className="popup-body">
+            <h1>Invalid username or password</h1>
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 }
 

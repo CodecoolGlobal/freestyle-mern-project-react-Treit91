@@ -34,7 +34,7 @@ function App() {
       setLoggedInUser(foundUser.username);
       setJwt(foundUser.token);
       setLoggedIn(true);
-    };
+    }
   }, []);
 
   function setInputValueToDefault() {
@@ -101,12 +101,14 @@ function App() {
                             {movie.poster_path ? (
                               <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt="movie"></img>
                             ) : null}
-                            {movie.hasOwnProperty('first_air_date') ? <p>{movie.name}</p> : <p>{movie.title}</p>}
-                            {movie.hasOwnProperty('first_air_date') ? (
-                              <p>{movie.first_air_date.split('-')[0]}</p>
-                            ) : (
-                              <p>{movie.release_date.split('-')[0]}</p>
-                            )}
+                            <div>
+                              {movie.hasOwnProperty('first_air_date') ? <p>{movie.name}</p> : <p>{movie.title}</p>}
+                              {movie.hasOwnProperty('first_air_date') ? (
+                                <p>{movie.first_air_date.split('-')[0]}</p>
+                              ) : (
+                                <p>{movie.release_date.split('-')[0]}</p>
+                              )}
+                            </div>
                           </React.Fragment>
                         )}
                       </div>
@@ -119,7 +121,7 @@ function App() {
             {loggedIn ? (
               <React.Fragment>
                 <button
-                  className="profile"
+                  className="profileButton"
                   onClick={() => {
                     setProfile(true);
                   }}
@@ -167,7 +169,7 @@ function App() {
       )}
 
       {!signupstate && !loginstate && !dropdownClicked && !profile ? (
-        <div>
+        <React.Fragment>
           <LandingPage
             setmovieClicked={getMovieClicked}
             isMovieClicked={movieClicked}
@@ -176,23 +178,17 @@ function App() {
             setEpisodesClicked={setEpisodesClicked}
             setSearch={setSearch}
           />
-        </div>
+        </React.Fragment>
       ) : signupstate && !signnedUp ? (
-        <div>
-          <Register />
-          <button onClick={() => setSignupstate(false)}>Cancel</button>
-        </div>
+        <Register setSignupstate={setSignupstate} />
       ) : loginstate ? (
-        <div>
-          <Login
-            setLoggedIn={setLoggedIn}
-            setLoginState={setLoginState}
-            setLoggedInUser={setLoggedInUser}
-            loggedInUser={loggedInUser}
-            setJwt={setJwt}
-          />
-          <button onClick={() => setLoginState(false)}>Cancel</button>
-        </div>
+        <Login
+          setLoggedIn={setLoggedIn}
+          setLoginState={setLoginState}
+          setLoggedInUser={setLoggedInUser}
+          loggedInUser={loggedInUser}
+          setJwt={setJwt}
+        />
       ) : dropdownClicked ? (
         <MediaDetails
           movieID={dropdownID}
