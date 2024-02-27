@@ -23,10 +23,9 @@ This project utilizes the following technologies:
 To get started with the project, follow these steps:
 
 1. Clone this repository to your local machine.
-2. Install the necessary dependencies for both the frontend and backend.
+2. Install the necessary dependencies for both the frontend and backend (for fronted use `npm i` in the frontend folder, and for backend  use `node server.js` in the backend folder).
 3. Set up your MongoDB database and configure the connection.
-4. Start the development server for both the frontend and backend.
-5. Access the application in your browser.
+4. Access the application in your browser on `http://localhost:3000`.
 
 ## Features
 
