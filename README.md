@@ -23,9 +23,12 @@ This project utilizes the following technologies:
 To get started with the project, follow these steps:
 
 1. Clone this repository to your local machine.
-2. Install the necessary dependencies for both the frontend and backend (for fronted use `npm i` then `npm start` in the client folder, and for backend  use `node server.js` in the server folder).
-3. Set up your MongoDB database and configure the connection.
-4. Access the application in your browser on `http://localhost:3000`.
+2. [Install docker](https://docs.docker.com/engine/install/)
+3. [Install docker-compose](https://docs.docker.com/compose/install/)
+4. Build docker image for the frontend in the client folder with `docker build -t moviedb-f .`
+5. Build docker image for the backend in the server folder with `docker build -t moviedb-b .`
+6. Run `docker-compose up` in the root folder of the project
+
 
 ## Features
 
