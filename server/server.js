@@ -3,18 +3,30 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const app = express();
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const cors = require('cors')
+
+require('dotenv').config();
+
 app.listen(3001)
 
-mongoose.connect('mongodb+srv://treit91:S4e12ipFD5hG18qa@cluster0.zjzcwnl.mongodb.net/test').then(() => {
+
+
+
+mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@mongo:27017/`).then(() => {
   console.log("Server is up")
 });;
 
 app.use(express.json());
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Authorization, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
-  next();
+app.use(cookieParser());
+
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
 });
 
 app.post('/api/register', async (req, res) => {
@@ -55,7 +67,7 @@ app.post('/api/login', async (req, res) => {
       } else {
         let token;
         try {
-          token = jwt.sign({ username: user.username }, 'secretkeyappearshere', {
+          token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, {
             expiresIn: '1h',
           });
         } catch (err) {
@@ -64,13 +76,22 @@ app.post('/api/login', async (req, res) => {
           return next(error);
         }
 
-        res.status(200).json({
-          success: true,
-          data: {
-            username: user.username,
-            token: token,
-          },
-        });
+        let options = {
+          maxAge: 1000 * 60 * 120, // would expire after 15 minutes
+          httpOnly: false, // The cookie only accessible by the web server
+          signed: false,
+          path: '/'
+      }
+      res.cookie('jwt', token, options);
+      res.status(200).json({success: true, data: {username: user.username}});
+
+        // res.status(200).json({
+        //   success: true,
+        //   data: {
+        //     username: user.username,
+        //     token: token,
+        //   },
+        // });
       }
     });
   } else {
@@ -82,7 +103,7 @@ app.get('/api/profile', async (req, res) => {
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(' ')[1];
     try{
-        const decodedToken = jwt.verify(token, 'secretkeyappearshere');
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findOne({ username: decodedToken.username });
         res.status(200).json({ success: true, data: { username: decodedToken.username }, user: { user } });
     } catch (err) {

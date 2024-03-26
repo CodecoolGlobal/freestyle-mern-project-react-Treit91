@@ -26,6 +26,7 @@ function Login(props) {
         password: password,
       }),
     });
+    console.log(document.cookie)
     const data = await res.json();
     if (data.success === true) {
       setLoginPopup(true);
@@ -37,7 +38,7 @@ function Login(props) {
         setLoginPopup(false);
       }, 1500);
       props.setJwt(data.data.token);
-      localStorage.setItem('user', JSON.stringify(data.data));
+     //localStorage.setItem('user', JSON.stringify(data.data));
     } else if (data.success !== true) {
       setInvalidPopup(true);
       setTimeout(() => {
@@ -75,7 +76,7 @@ function Login(props) {
         <div className="loginButtons">
           <button type="submit">Sign in!</button>
           <button onClick={() => props.setLoginState(false)}>Cancel</button>
-        </div>
+        </div> 
       </form>
       {loginPopup ? (
         <div className="popup-container">
